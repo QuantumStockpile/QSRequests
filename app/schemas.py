@@ -1,15 +1,13 @@
 from tortoise import Tortoise
 from tortoise.contrib.pydantic import pydantic_model_creator
 
-from app.models import Model
+from app.models import Request
 
-Tortoise.init_models(
-    ["app.models"], "models"
-)
+Tortoise.init_models(["app.models"], "models")
 
-Schema = pydantic_model_creator(Model)
-Create = pydantic_model_creator(
-    Model,
-    name="ModelCreate",
+RequestSchema = pydantic_model_creator(Request)
+RequestCreate = pydantic_model_creator(
+    Request,
+    name="RequestCreate",
     exclude_readonly=True,
 )

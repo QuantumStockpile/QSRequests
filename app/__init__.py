@@ -1,3 +1,3 @@
-from .models import Model
+from .models import *
 from .schemas import *
-from .crud import ModelCRUD
+from .crud import *

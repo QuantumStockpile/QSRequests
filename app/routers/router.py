@@ -1,10 +1,25 @@
-from fastapi import APIRouter, Path
+from fastapi import Depends
+from ms_core import BaseCRUDRouter, DefaultEndpoint, EndpointConfig
 
-from app import ModelCRUD, Schema
+from app import RequestCRUD, RequestSchema, RequestCreate
+from app.dependencies import require_role
 
-router = APIRouter(prefix="/clientele", tags=["clientele"])
-
-
-@router.get("/{item_id}")
-async def get_by_id(item_id: int = Path()) -> Schema | None:
-    return await ModelCRUD.get_by_id(item_id)
+router = BaseCRUDRouter(
+    crud=RequestCRUD,
+    schema=RequestSchema,
+    schema_create=RequestCreate,
+    endpoint_configs={
+        DefaultEndpoint.CREATE: EndpointConfig(
+            path="/",
+            methods=["POST"],
+            dependencies=[require_role("admin")],
+        ),
+        DefaultEndpoint.DELETE: EndpointConfig(
+            path="/{item_id}", methods=["DELETE"], dependencies=[require_role("admin")]
+        ),
+        DefaultEndpoint.UPDATE: EndpointConfig(
+            path="/{item_id}", methods=["PATCH"], dependencies=[require_role("admin")]
+        ),
+    },
+    dependencies=[Depends(require_role("user"))],
+)

@@ -1,0 +1,27 @@
+[project]
+name = "qsrequests"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aerich>=0.8.2",
+    "fastapi>=0.112.4",
+    "httpx>=0.28.1",
+    "ms-core",
+    "multimethod>=1.12",
+    "pydantic>=2.11.7",
+    "tomlkit>=0.13.3",
+    "tortoise-orm[asyncpg]>=0.21.7",
+    "uvicorn>=0.35.0",
+]
+[tool.pyright]
+reportInvalidTypeForm = "none"
+
+[tool.uv.sources]
+ms-core = { url = "https://github.com/HexChap/MSCore/archive/refs/heads/master.zip" }
+
+[tool.aerich]
+tortoise_orm = "main.tortoise_conf"
+location = "./migrations"
+src_folder = "./."
