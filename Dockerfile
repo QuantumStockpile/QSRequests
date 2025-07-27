@@ -17,5 +17,19 @@ ADD . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen
 
-# Run with uvicorn
-CMD ["uv", "run", "uvicorn", "main:application", "--host", "0.0.0.0", "--port", "8000"]
+# Create a startup script that runs migrations and starts the app
+RUN echo '#!/bin/bash\n\
+# Wait for database to be ready (if needed)\n\
+# sleep 5\n\
+\n\
+# Run database migrations\n\
+echo "Running database migrations..."\n\
+uv run aerich upgrade || echo "Migration failed or already up to date"\n\
+\n\
+# Start the application\n\
+echo "Starting application..."\n\
+exec uv run uvicorn main:application --host 0.0.0.0 --port 8000\n\
+' > /app/start.sh && chmod +x /app/start.sh
+
+# Run the startup script
+CMD ["/app/start.sh"]
