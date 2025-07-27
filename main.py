@@ -7,15 +7,10 @@ from ms_core import setup_app
 from app.settings import db_url
 
 application = FastAPI(
-    title="TemplateMicroservice",
+    title="QSRequests",
 )
 
-setup_app(
-    application,
-    db_url,
-    Path("app") / "routers",
-    ["app.models"]
-)
+setup_app(application, db_url, Path("app") / "routers", ["app.models"])
 
 
 if __name__ == "__main__":
