@@ -8,6 +8,8 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel, ValidationError
 
+from app.settings import usersms_url
+
 
 # Configuration structure
 class AuthConfig(NamedTuple):
@@ -24,7 +26,9 @@ class AuthConfig(NamedTuple):
 
 # Global configuration
 _auth_config: Optional[AuthConfig] = None
-_oauth2_scheme: Optional[OAuth2PasswordBearer] = None
+_oauth2_scheme: Optional[OAuth2PasswordBearer] = OAuth2PasswordBearer(
+    tokenUrl="http://localhost:8000" + "/token"
+)
 
 # Cache management
 _role_cache: dict[int, str] = {}
@@ -71,7 +75,7 @@ def configure_auth(
     global _auth_config, _oauth2_scheme
 
     if token_url is None:
-        token_url = f"{auth_service_url}/token"
+        token_url = f"http://localhost:8000/token"
 
     if logger is None:
         logger = logging.getLogger(__name__)
